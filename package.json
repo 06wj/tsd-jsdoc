@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:englercj/jsdoc2tsd.git"
+    "url": "git@github.com:06wj/tsd-jsdoc.git"
   },
   "publishConfig": {
     "access": "public"
