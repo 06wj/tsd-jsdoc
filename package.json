@@ -1,6 +1,6 @@
 {
   "name": "@hilo/tsd-jsdoc",
-  "version": "2.5.0",
+  "version": "0.1.0",
   "description": "Compiles JSDoc annotated javascript into a Typescript Declaration File (.d.ts).",
   "main": "dist/publish.js",
   "author": "Chad Engler <chad@pantherdev.com>",
