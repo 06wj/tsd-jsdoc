@@ -1,5 +1,5 @@
 {
-  "name": "tsd-jsdoc",
+  "name": "@hilo/tsd-jsdoc",
   "version": "2.5.0",
   "description": "Compiles JSDoc annotated javascript into a Typescript Declaration File (.d.ts).",
   "main": "dist/publish.js",

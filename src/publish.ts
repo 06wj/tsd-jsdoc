@@ -59,6 +59,30 @@ export function publish(data: TDocletDb, opts: ITemplateConfig)
     // get the doc list and filter out inherited non-overridden members
     const docs = data().get().filter(d => !d.inherited || d.overrides);
 
+    const classDict = {} as any;
+
+    for (let i = docs.length - 1;i >= 0;i --) {
+        const d = docs[i] as any;
+        if (d.kind === 'class') {
+            docs.splice(i, 1);
+            const filename = (`${d.meta.filename}/${d.longname}`) as string;
+            const classInfo = classDict[filename] = classDict[filename] || {};
+            if (d.alias) {
+                classInfo.alias = d;
+            } else {
+                classInfo.origin = d;
+            }
+        }
+    }
+
+    Object.values(classDict).forEach((classInfo:any) => {
+        const {alias, origin} = classInfo;
+        docs.push(origin || alias);
+        if (origin && alias) {
+            origin.params = alias.params;
+        }
+    });
+
     // create an emitter to parse the docs
     const emitter = new Emitter(opts);
     emitter.parse(docs);
