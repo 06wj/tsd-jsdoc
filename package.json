@@ -9,6 +9,9 @@
     "type": "git",
     "url": "git@github.com:englercj/jsdoc2tsd.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
