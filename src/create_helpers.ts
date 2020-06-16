@@ -100,28 +100,24 @@ function handlePropsComment(props: IDocletProp[], jsdocTagName: String): string
 {
     return props.map((prop) =>
     {
-        if (prop.description)
+        let name;
+        if (prop.optional)
         {
-            let name;
-            if (prop.optional)
+            if (prop.defaultvalue !== undefined)
             {
-                if (prop.defaultvalue !== undefined)
-                {
-                    name = `[${prop.name} = ${prop.defaultvalue}]`;
-                }
-                else
-                {
-                    name = `[${prop.name}]`;
-                }
+                name = `[${prop.name} = ${prop.defaultvalue}]`;
             }
             else
             {
-                name = prop.name;
+                name = `[${prop.name}]`;
             }
-            const description = ` - ${formatMultilineComment(prop.description)}`;
-            return `\n * @${jsdocTagName} ${name}${description}`
         }
-        return ''
+        else
+        {
+            name = prop.name;
+        }
+        const description = prop.description?` - ${formatMultilineComment(prop.description)}`:'';
+        return `\n * @${jsdocTagName} ${name}${description}`
     }).filter((value) => value !== '').join('')
 }
 
