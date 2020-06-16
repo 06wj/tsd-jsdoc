@@ -338,7 +338,7 @@ export function createInterface(doclet: IClassDoclet, children?: ts.Node[], altN
     validateInterfaceChildren(children);
 
     const mods = doclet.memberof ? undefined : [declareModifier];
-    const members = children as ts.TypeElement[];
+    const members = children as any[] || [];
     const typeParams = resolveTypeParameters(doclet);
     const heritageClauses = resolveHeritageClauses(doclet, true);
     if (doclet.properties)
