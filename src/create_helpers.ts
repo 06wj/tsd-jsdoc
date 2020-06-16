@@ -341,7 +341,49 @@ export function createInterface(doclet: IClassDoclet, children?: ts.Node[], altN
     const members = children as ts.TypeElement[];
     const typeParams = resolveTypeParameters(doclet);
     const heritageClauses = resolveHeritageClauses(doclet, true);
+    if (doclet.properties)
+    {
+        const tree = new PropTree(doclet.properties);
 
+        nextProperty: for (let i = 0; i < tree.roots.length; ++i)
+        {
+            const node = tree.roots[i];
+
+            // Check whether the property has already been declared.
+            for (const tsProp of members.filter(member => ts.isPropertyDeclaration(member)))
+            {
+                if (tsProp.name)
+                {
+                    const propName:string = (<any> tsProp.name).text;
+                    if (propName === node.name)
+                    {
+                        debug(`createClass(): skipping property already declared '${node.name}'`);
+                        continue nextProperty;
+                    }
+                }
+            }
+
+            const opt = node.prop.optional ? ts.createToken(ts.SyntaxKind.QuestionToken) : undefined;
+            const t = node.children.length ? createTypeLiteral(node.children, node) : resolveType(node.prop.type);
+
+            const property = ts.createProperty(
+                undefined,
+                undefined,
+                node.name,
+                opt,
+                t,
+                undefined
+            );
+
+            if (node.prop.description)
+            {
+                let comment = `*\n * ${node.prop.description.split(/\r\s*/).join("\n * ")}\n`;
+                ts.addSyntheticLeadingComment(property, ts.SyntaxKind.MultiLineCommentTrivia, comment, true)
+            }
+
+            members.push(property);
+        }
+    }
     return handleComment(doclet, ts.createInterfaceDeclaration(
         undefined,      // decorators
         mods,           // modifiers
