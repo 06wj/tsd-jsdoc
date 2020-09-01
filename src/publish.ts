@@ -63,6 +63,7 @@ export function publish(data: TDocletDb, opts: ITemplateConfig)
 
     for (let i = docs.length - 1;i >= 0;i --) {
         const d = docs[i] as any;
+
         if (d.kind === 'class') {
             docs.splice(i, 1);
             const filename = (`${d.meta.filename}/${d.longname}`) as string;
@@ -73,11 +74,22 @@ export function publish(data: TDocletDb, opts: ITemplateConfig)
                 classInfo.origin = d;
             }
         }
+
+        if (d.params) {
+            // fix for [params.[value:string]]
+            d.params.forEach((param:any) => {
+                if (param.name.match(/\[[\w\d]+:[\w\d]+\]/)) {
+                    param.optional = false;
+                }
+            });
+        }
     }
 
     Object.values(classDict).forEach((classInfo:any) => {
         const {alias, origin} = classInfo;
-        docs.push(origin || alias);
+        const realClassInfo = origin || alias;
+        docs.push(realClassInfo);
+
         if (origin && alias) {
             origin.params = alias.params;
         }
